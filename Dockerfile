@@ -6,5 +6,7 @@ LABEL vendor="Holisticon AG"
 ENV DEBIAN_FRONTEND noninteractive
 
 # Install full kalilinux
-RUN apt-get -y update ; apt-get -y --force-yes install kali-linux-full &&\
-  rm -rf /var/lib/apt/lists/*
+RUN apt-get -y update && apt-get -y upgrade &&\
+  apt-get autoremove -y && apt-get -y clean &&\
+  apt-get -y --force-yes install kali-linux-full man-db exploitdb &&\
+  apt clean && rm -rf /var/lib/apt/lists/*
