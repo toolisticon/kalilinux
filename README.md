@@ -7,3 +7,5 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/toolisticon/kalilinux.svg)](https://hub.docker.com/r/toolisticon/kalilinux/)
 
 > Prepared Kali Docker Image with `kalilinux-full` preinstalled.
+
+Use this image to get kali fully up-and-running without installing further packages
