@@ -1,4 +1,4 @@
-FROM kalilinux/kali-linux-docker
+FROM kalilinux/kali
 
 LABEL authors="Martin Reinhardt <martin.reinhardt@holisticon.de>"
 LABEL vendor="Holisticon AG"
