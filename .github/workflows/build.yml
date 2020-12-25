@@ -1,0 +1,44 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Docker build and test
+      run: |
+        .bin/build-image.sh
+        .bin/test-image.sh
+
+  deploy:
+    needs: [test, docker]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: publish release docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: toolisticon/kalilinux
+          tags: latest
+        if: contains( github.ref, 'master' ) || contains( github.base_ref, 'master' )
+
+      - name: publish preview docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: toolisticon/kalilinux
+          tags: next
+        if: contains( github.ref, 'develop' ) || contains( github.base_ref, 'develop' )
