@@ -8,19 +8,22 @@ on:
 
 jobs:
   build:
-    name: Test on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+    name: Build Docker
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Docker build and test
         run: |
-          .bin/build-image.sh
-          .bin/test-image.sh
+             # Workaround to provide additional free space for testing.
+             #   https://github.com/actions/virtual-environments/issues/2840
+             sudo rm -rf /usr/share/dotnet
+             sudo rm -rf /opt/ghc
+             sudo rm -rf "/usr/local/share/boost"
+             sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+             .bin/build-image.sh
+             .bin/test-image.sh
 
   deploy:
     needs: [build]
